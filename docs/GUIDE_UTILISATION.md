@@ -1,5 +1,22 @@
 # Guide d'utilisation PHARMAGEST
 
+## Prise en main
+
+PHARMAGEST permet à l'équipe de suivre les approvisionnements, les lots, les
+ventes et les règlements d'une pharmacie. Les montants sont affichés en Ariary.
+
+Pour une première installation, suivre le [démarrage sous Windows](../README.md#installation-et-démarrage-sous-windows).
+Si l'application est déjà en service, utiliser l'adresse fournie par le
+responsable. En local, ouvrir [la page de connexion sur le port 8000](http://127.0.0.1:8000/connexion/)
+si le serveur du projet a été démarré sur ce port.
+
+Pour préparer une première vente, suivre ce parcours dans l'ordre.
+
+1. Renseigner les coordonnées de la pharmacie dans **Paramètres** et créer les comptes du personnel.
+2. Créer une catégorie, un médicament et un fournisseur actif.
+3. Confirmer une commande d'achat, puis valider sa réception avec un numéro de lot et une date de péremption.
+4. Créer une vente et ajouter le médicament. Faire valider la vente, enregistrer le règlement, puis ouvrir la facture et le reçu.
+
 ## Connexion et accès
 
 Démarrer le serveur selon le README, puis ouvrir `/connexion/`. Les comptes
@@ -18,6 +35,19 @@ Pour changer son mot de passe, choisir Mon mot de passe. Pour le récupérer,
 utiliser Mot de passe oublié sur la connexion et ouvrir le lien reçu par e-mail.
 Le lien expire en une heure et ne peut pas être réutilisé après changement.
 Si le service d'e-mail n'est pas configuré, contacter le responsable.
+Avec la configuration locale de développement par défaut, les messages de
+récupération sont enregistrés dans `tmp/emails/`.
+
+### Créer un compte pour un membre du personnel
+
+1. Avec un compte autorisé, ouvrir **Utilisateurs et rôles**, puis **Créer un utilisateur**.
+2. Saisir le nom d'utilisateur et le mot de passe, sélectionner le ou les rôles nécessaires et enregistrer.
+3. Ouvrir une fenêtre privée et vérifier que le nouveau compte accède aux écrans attendus.
+
+Pour changer un rôle ou désactiver un compte, ouvrir sa fiche depuis
+**Utilisateurs et rôles** et choisir **Modifier**. Les écrans disponibles
+dépendent des permissions accordées. L'administration Django sous `/admin/`
+est un écran distinct qui exige le statut équipe.
 
 ## Médicaments et catégories
 
@@ -67,7 +97,8 @@ Créer une nouvelle vente, avec un client facultatif. Rechercher un médicament
 par nom ou placer le curseur dans le champ de recherche pour scanner un code-barres
 avec un lecteur fonctionnant comme un clavier. Choisir le médicament et la quantité.
 
-Le lot est facultatif : sans choix, l'allocation utilise FEFO. Si un lot est
+Le lot est facultatif. Sans choix, la règle FEFO prélève d'abord dans les lots
+vendables dont la date de péremption est la plus proche. Si un lot est
 sélectionné, il doit appartenir au médicament, être non bloqué, non périmé et
 suffisant. Les lots explicitement demandés sont réservés avant l'allocation
 automatique des autres lignes. La disponibilité est revérifiée sous verrou à
@@ -133,6 +164,22 @@ Le chiffre d'affaires brut, net des retours et les encaissements sont distincts.
 Dans Rapports, sélectionner les dates puis télécharger les rapports de ventes,
 achats, stocks et péremptions. Les documents utilisent les informations de
 pharmacie renseignées dans Paramètres. Aucun identifiant fiscal n'est inventé.
+
+Le rapport de ventes sélectionne les ventes selon leur date de création et
+inclut les règlements et retours associés, même s'ils ont été enregistrés après
+la période choisie. Pour rapprocher la caisse, distinguer le montant des ventes,
+les paiements confirmés, les remboursements et le solde restant dû.
+
+## Dépannage courant
+
+| Situation | Vérification à faire |
+| --- | --- |
+| Django refuse le nom d'utilisateur et le mot de passe | Vérifier le nom d'utilisateur et ses majuscules, ressaisir le mot de passe manuellement et vérifier que le compte est actif. Pour une installation locale, contrôler le port affiché dans la console Django. Deux copies du projet peuvent utiliser des bases différentes. |
+| Le port 8000 ouvre une autre copie du projet | Depuis le dossier du bon projet, démarrer Django avec `./.venv/Scripts/python.exe manage.py runserver 127.0.0.1:8001` si le port est libre, puis ouvrir [la connexion sur le port 8001](http://127.0.0.1:8001/connexion/). |
+| Le mot de passe d'un compte local est perdu | Utiliser **Mot de passe oublié ?**. Une personne autorisée ayant accès au terminal du projet peut aussi exécuter `./.venv/Scripts/python.exe manage.py changepassword NOM_UTILISATEUR` et saisir le nouveau mot de passe à l'invite. |
+| Un menu ou une action est absent | Demander au responsable de vérifier les rôles et les permissions du compte. Contrôler aussi le statut de l'opération, car certaines actions sont réservées aux brouillons ou aux ventes validées. |
+| Un médicament est absent du sélecteur de vente | Vérifier que le médicament est actif et qu'il dispose d'un lot vendable avec une quantité suffisante. Au besoin, vérifier que la réception a bien été confirmée. |
+| Un paiement par carte ou mobile ne réduit pas le solde dû | Ouvrir la vente et vérifier le statut du paiement. Une personne autorisée doit confirmer le règlement après contrôle auprès du prestataire. |
 
 ## Sauvegarde et responsabilité d'exploitation
 
