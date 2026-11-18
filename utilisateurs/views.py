@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import modelform_factory
+from django.forms import CheckboxSelectMultiple, modelform_factory
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import transaction
 from ventes.audit import journaliser
@@ -36,8 +36,13 @@ def modifier(request, pk=None):
                 fields = ("username", "first_name", "last_name", "email", "telephone", "groups")
         classe = CreationUtilisateur
     form = classe(request.POST or None, instance=obj)
-    for champ in form.fields.values():
-        champ.widget.attrs["class"] = "form-control"
+    groupes = form.fields["groups"]
+    groupes.label = "Rôles"
+    groupes.help_text = "Cochez les rôles correspondant aux fonctions de la personne."
+    groupes.widget = CheckboxSelectMultiple(choices=groupes.choices)
+    for nom, champ in form.fields.items():
+        if nom != "groups":
+            champ.widget.attrs["class"] = "form-control"
     if request.method == "POST" and form.is_valid():
         compte = form.save()
         journaliser(request.user, "modification_compte" if pk else "creation_compte", compte,

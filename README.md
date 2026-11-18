@@ -27,7 +27,22 @@ une clé temporaire est générée. En production, l'absence de clé bloque le d
 
 La commande `configurer_roles` crée Administrateur, Pharmacien, Gestionnaire de
 stock, Caissier et Responsable de gestion. Elle ajoute les droits de référence sans retirer les droits
-personnalisés. Attribuer les groupes aux utilisateurs dans `/admin/`.
+personnalisés.
+
+1. Connectez-vous avec le superutilisateur sur http://127.0.0.1:8000/connexion/.
+2. Ouvrez **Utilisateurs et rôles**, puis **Créer un utilisateur**.
+3. Saisissez un identifiant et un mot de passe, cochez le rôle métier et
+   enregistrez. Pour un compte existant, utilisez **Modifier**.
+4. Déconnectez-vous ou ouvrez une fenêtre privée. Sur `/connexion/`, saisissez
+   l'identifiant et le mot de passe du compte métier. Le menu affiche les écrans
+   autorisés pour ce rôle.
+
+Pour tester la caisse, préparez un brouillon avec le compte **Caissier**,
+ouvrez la même vente avec le compte **Pharmacien** et validez-la. Le caissier
+peut ensuite enregistrer le paiement. Il faut au préalable un médicament
+disponible dans un lot vendable.
+
+Les groupes sont également disponibles dans `/admin/`.
 Un groupe Administrateur ne confère pas le statut superutilisateur.
 L'accès à l'administration Django nécessite aussi `is_staff`.
 

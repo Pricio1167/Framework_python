@@ -1,35 +1,118 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
+{% load pharmagest %}
+
 {% block content %}
-<h1>Rapports et analyses</h1>
-<form method="get" class="card p-4 mb-4">
-  {{ form.as_p }}
-  <button class="btn btn-primary align-self-start">Appliquer la période</button>
-</form>
+<header class="page-heading">
+  <h1>Rapports et analyses</h1>
+</header>
+
+<section class="surface mb-4" aria-labelledby="periode-rapport">
+  <div class="section-heading mb-3">
+    <h2 id="periode-rapport">Période des ventes et des achats</h2>
+  </div>
+  <form method="get">
+    {{ form.non_field_errors }}
+    <div class="row g-3 align-items-start">
+      {% for field in form %}
+        <div class="col-12 col-sm">
+          <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {{ field.errors }}
+        </div>
+      {% endfor %}
+      <div class="col-12 col-sm-auto pt-sm-4 d-flex flex-wrap gap-2">
+        <button class="btn btn-primary mt-sm-1" type="submit">Appliquer la période</button>
+        {% if form.date_debut.value or form.date_fin.value %}
+          <a class="btn btn-outline-primary mt-sm-1" href="{% url 'rapports_accueil' %}">Réinitialiser</a>
+        {% endif %}
+      </div>
+    </div>
+  </form>
+</section>
+
 {% if ventes %}
-<section class="card p-4 mb-4" aria-labelledby="ventes-rapport">
-  <h2 id="ventes-rapport" class="h4">Ventes de la période</h2>
-  <p>La période sélectionne les ventes par date de création. Les retours et paiements associés sont cumulés sur ces ventes.</p>
-  <dl class="row">
-    <dt class="col-sm-7">Nombre de ventes validées</dt><dd class="col-sm-5">{{ ventes.nombre_ventes }}</dd>
-    <dt class="col-sm-7">Chiffre d’affaires brut</dt><dd class="col-sm-5">{{ ventes.chiffre_affaires }} Ar</dd>
-    <dt class="col-sm-7">Retours validés</dt><dd class="col-sm-5">{{ ventes.retours }} Ar</dd>
-    <dt class="col-sm-7">Chiffre d’affaires net</dt><dd class="col-sm-5">{{ ventes.chiffre_affaires_net }} Ar</dd>
-    <dt class="col-sm-7">Montant encaissé</dt><dd class="col-sm-5">{{ ventes.montant_encaisse }} Ar</dd>
-    <dt class="col-sm-7">Remboursements</dt><dd class="col-sm-5">{{ ventes.remboursements }} Ar</dd>
-    <dt class="col-sm-7">Encaissement net</dt><dd class="col-sm-5">{{ ventes.encaissement_net }} Ar</dd>
-    <dt class="col-sm-7">Reste à payer</dt><dd class="col-sm-5">{{ ventes.reste_a_payer }} Ar</dd>
+<section class="surface mb-4" aria-labelledby="ventes-rapport">
+  <div class="section-heading flex-wrap">
+    <h2 id="ventes-rapport">Ventes de la période</h2>
+    <a class="btn btn-outline-primary" href="{% url 'rapport_ventes_pdf' %}?{{ request.GET.urlencode }}">
+      <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Rapport des ventes PDF
+    </a>
+  </div>
+  <dl class="metric-grid mb-3">
+    <div class="metric-card">
+      <dt class="metric-top">Chiffre d’affaires net</dt>
+      <dd class="metric mb-0">{{ ventes.chiffre_affaires_net|ariary }}</dd>
+    </div>
+    <div class="metric-card">
+      <dt class="metric-top">Encaissement net</dt>
+      <dd class="metric mb-0">{{ ventes.encaissement_net|ariary }}</dd>
+    </div>
+    <div class="metric-card">
+      <dt class="metric-top">Reste à payer</dt>
+      <dd class="metric mb-0">{{ ventes.reste_a_payer|ariary }}</dd>
+    </div>
   </dl>
-  <a class="btn btn-outline-primary align-self-start" href="{% url 'rapport_ventes_pdf' %}?{{ request.GET.urlencode }}">Télécharger le rapport PDF</a>
+  <div class="row g-3">
+    <div class="col-12 col-xl-6">
+      <h3 class="h6">Détail des ventes</h3>
+      <dl class="sale-totals">
+        <div><dt>Ventes validées</dt><dd>{{ ventes.nombre_ventes }}</dd></div>
+        <div><dt>Chiffre d’affaires brut</dt><dd>{{ ventes.chiffre_affaires|ariary }}</dd></div>
+        <div><dt>Retours validés</dt><dd>{{ ventes.retours|ariary }}</dd></div>
+      </dl>
+    </div>
+    <div class="col-12 col-xl-6">
+      <h3 class="h6">Détail des paiements</h3>
+      <dl class="sale-totals">
+        <div><dt>Montant encaissé</dt><dd>{{ ventes.montant_encaisse|ariary }}</dd></div>
+        <div><dt>Remboursements</dt><dd>{{ ventes.remboursements|ariary }}</dd></div>
+      </dl>
+    </div>
+  </div>
+  <p class="data-note">La période sélectionne les ventes par date de création. Les retours et paiements associés sont cumulés sur ces ventes.</p>
 </section>
 {% endif %}
-{% include 'rapports/achats.html' %}{% if stocks %}
-<section class="card p-4" aria-labelledby="stock-rapport">
-  <h2 id="stock-rapport" class="h4">Alertes de stock actuelles</h2>
-  <p>Ces données décrivent le stock actuel et ne dépendent pas de la période des ventes.</p>
-  <ul>{% for alerte in stocks.medicaments_stock_faible %}<li>{{ alerte.medicament }} : {{ alerte.quantite }} unités (seuil {{ alerte.seuil }})</li>{% empty %}<li>Aucun médicament sous le seuil d’alerte.</li>{% endfor %}</ul>
-  <p><a href="{% url 'gestion_liste' 'stocks' %}?stock=proches">{{ stocks.lots_proches_peremption.count }} lots proches de la péremption</a> · <a href="{% url 'gestion_liste' 'stocks' %}?stock=perimes">{{ stocks.lots_perimes.count }} lots périmés</a></p>
-  <a class="btn btn-outline-primary align-self-start mb-2" href="{% url 'rapport_peremptions_pdf' %}">Liste des péremptions PDF</a><a class="btn btn-outline-primary align-self-start" href="{% url 'rapport_stocks_pdf' %}">Télécharger le rapport des stocks PDF</a>
+
+{% include 'rapports/achats.html' %}
+
+{% if stocks %}
+<section class="surface" aria-labelledby="stock-rapport">
+  <div class="section-heading flex-wrap">
+    <h2 id="stock-rapport">Alertes de stock actuelles</h2>
+    <div class="d-flex flex-wrap gap-2">
+      <a class="btn btn-outline-primary" href="{% url 'rapport_peremptions_pdf' %}">Péremptions PDF</a>
+      <a class="btn btn-outline-primary" href="{% url 'rapport_stocks_pdf' %}">Rapport des stocks PDF</a>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-12 col-lg-6">
+      <h3 class="h6">Médicaments sous le seuil d’alerte</h3>
+      <ul class="list-unstyled mb-0">
+        {% for alerte in stocks.medicaments_stock_faible %}
+          <li class="product-row flex-wrap">
+            <span class="product-name">{{ alerte.medicament }}</span>
+            <span class="status-pill warning">{{ alerte.quantite }} unités · seuil {{ alerte.seuil }}</span>
+          </li>
+        {% empty %}
+          <li class="text-muted">Aucun médicament sous le seuil d’alerte.</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-12 col-lg-6">
+      <h3 class="h6">Péremptions</h3>
+      <a class="alert-row" href="{% url 'gestion_liste' 'stocks' %}?stock=proches">
+        <span class="alert-icon"><i class="bi bi-hourglass-split" aria-hidden="true"></i></span>
+        <strong>Lots proches de la péremption</strong>
+        <span class="alert-count">{{ stocks.lots_proches_peremption.count }}</span>
+      </a>
+      <a class="alert-row" href="{% url 'gestion_liste' 'stocks' %}?stock=perimes">
+        <span class="alert-icon danger"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></span>
+        <strong>Lots périmés</strong>
+        <span class="alert-count">{{ stocks.lots_perimes.count }}</span>
+      </a>
+    </div>
+  </div>
+  <p class="data-note">Ces alertes reflètent l’état actuel du stock, quelle que soit la période sélectionnée.</p>
 </section>
 {% endif %}
 {% endblock %}
-

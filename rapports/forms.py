@@ -2,8 +2,8 @@ from django import forms
 
 
 class PeriodeForm(forms.Form):
-    date_debut = forms.DateField(required=False, label="Du", widget=forms.DateInput(attrs={"type": "date"}))
-    date_fin = forms.DateField(required=False, label="Au", widget=forms.DateInput(attrs={"type": "date"}))
+    date_debut = forms.DateField(required=False, label="Du", widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}))
+    date_fin = forms.DateField(required=False, label="Au", widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}))
 
     def clean(self):
         valeurs = super().clean()

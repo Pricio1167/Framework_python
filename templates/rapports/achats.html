@@ -1,1 +1,28 @@
-{% load pharmagest %}{% if achats %}<section class="surface mb-4"><h2 class="h4">Achats de la période</h2><p>{{ achats.nombre_commandes }} commandes confirmées · Total commandé : <strong>{{ achats.montant_commandes|ariary }}</strong></p><p>{{ achats.nombre_receptions }} réceptions validées · Total reçu : <strong>{{ achats.montant_receptionne|ariary }}</strong></p><p class="data-note">Les commandes et réceptions sont filtrées sur leurs dates respectives ; les brouillons et commandes annulées sont exclus.</p><a class="btn btn-outline-primary" href="{% url 'rapport_achats_pdf' %}?{{ request.GET.urlencode }}">Rapport des achats PDF</a></section>{% endif %}
+{% load pharmagest %}
+{% if achats %}
+<section class="surface mb-4" aria-labelledby="achats-rapport">
+  <div class="section-heading flex-wrap">
+    <h2 id="achats-rapport">Achats de la période</h2>
+    <a class="btn btn-outline-primary" href="{% url 'rapport_achats_pdf' %}?{{ request.GET.urlencode }}">
+      <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Rapport des achats PDF
+    </a>
+  </div>
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <h3 class="h6">Commandes confirmées</h3>
+      <dl class="sale-totals">
+        <div><dt>Nombre de commandes</dt><dd>{{ achats.nombre_commandes }}</dd></div>
+        <div><dt>Total commandé</dt><dd>{{ achats.montant_commandes|ariary }}</dd></div>
+      </dl>
+    </div>
+    <div class="col-12 col-md-6">
+      <h3 class="h6">Réceptions validées</h3>
+      <dl class="sale-totals">
+        <div><dt>Nombre de réceptions</dt><dd>{{ achats.nombre_receptions }}</dd></div>
+        <div><dt>Total reçu</dt><dd>{{ achats.montant_receptionne|ariary }}</dd></div>
+      </dl>
+    </div>
+  </div>
+  <p class="data-note">Les commandes et réceptions sont filtrées sur leurs dates respectives. Les brouillons et commandes annulées sont exclus.</p>
+</section>
+{% endif %}
