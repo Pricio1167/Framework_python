@@ -1,73 +1,45 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>PHARMAGEST | Tableau de bord</title>
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
-
-<body class="bg-light">
-
-    <nav class="navbar navbar-dark bg-success px-4">
-        <a class="navbar-brand fw-bold" href="/">
-            PHARMAGEST
-        </a>
-    </nav>
-
-    <main class="container py-5">
-
-        <h1>Tableau de bord</h1>
-        <p class="text-muted">
-            Bienvenue dans votre application de gestion de pharmacie.
-        </p>
-
-        <div class="row g-4 mt-3">
-
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6>Médicaments</h6>
-                        <h2>0</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6>Ventes du jour</h6>
-                        <h2>0 Ar</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6>Stocks faibles</h6>
-                        <h2>0</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6>Péremptions proches</h6>
-                        <h2>0</h2>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-</body>
-</html>
+﻿{% extends 'base.html' %}
+{% load static pharmagest %}
+{% block scripts %}
+{% if perms.ventes.view_vente %}<script src="{% static 'vendor/chartjs/chart.umd.js' %}" defer></script><script src="{% static 'js/dashboard.js' %}" defer></script>{% endif %}
+{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><span class="eyebrow">Votre activité en un regard</span><h1>Tableau de bord</h1><p>Bienvenue {{ user.first_name|default:user.username }}. Voici la situation de votre pharmacie.</p></div>
+  <div class="page-date"><i class="bi bi-calendar3" aria-hidden="true"></i>{% now 'l j F Y' %}</div>
+</div>
+{% if perms.ventes.view_vente or perms.achats.view_commandeachat or perms.medicaments.view_medicament %}{% include 'dashboard/periode.html' %}{% endif %}{% if jour %}
+<section class="metric-grid" aria-label="Indicateurs de vente">
+  <article class="metric-card"><div class="metric-top">Chiffre d’affaires du jour<span class="metric-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span></div><div class="metric">{{ jour.chiffre_affaires|ariary }}</div><div class="metric-note">{{ jour.nombre_ventes }} vente{{ jour.nombre_ventes|pluralize }} validée{{ jour.nombre_ventes|pluralize }} · montant brut</div></article>
+  <article class="metric-card"><div class="metric-top">Chiffre d’affaires du mois<span class="metric-icon"><i class="bi bi-calendar2-week" aria-hidden="true"></i></span></div><div class="metric">{{ mois.chiffre_affaires_net|ariary }}</div><div class="metric-note">Net des retours validés · brut : {{ mois.chiffre_affaires|ariary }}</div></article>
+  <article class="metric-card"><div class="metric-top">Encaissement net du mois<span class="metric-icon green"><i class="bi bi-wallet2" aria-hidden="true"></i></span></div><div class="metric">{{ mois.encaissement_net|ariary }}</div><div class="metric-note">Paiements moins remboursements sur les ventes du mois</div></article>
+</section>
+{% endif %}
+<div class="dashboard-main">
+  {% if evolution %}
+  <section class="surface">
+    <div class="section-heading"><div><h2>Évolution des ventes</h2><p class="data-note">Les sept derniers jours · montants en Ariary</p></div><a href="{% url 'rapports_accueil' %}">Voir les rapports <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></div>
+    <div class="chart-container"><canvas id="graphique-ventes" role="img" aria-label="Évolution du chiffre d’affaires brut et net sur sept jours. Les valeurs sont disponibles dans le tableau ci-dessous."></canvas></div>
+    {{ evolution|json_script:'evolution-ventes' }}
+    <details class="mt-3"><summary class="data-note">Consulter les valeurs du graphique</summary><div class="table-responsive"><table class="table"><thead><tr><th>Jour</th><th>Brut</th><th>Net des retours</th></tr></thead><tbody>{% for point in evolution %}<tr><td>{{ point.date }}</td><td>{{ point.brut|ariary }}</td><td>{{ point.net|ariary }}</td></tr>{% endfor %}</tbody></table></div></details>
+    <p class="data-note">Les ventes sont regroupées par date de création. Le net inclut leurs retours validés, quelle que soit la date du retour.</p>
+  </section>
+  {% endif %}
+  {% if stock %}
+  <section class="surface"><div class="section-heading"><h2>Points de vigilance</h2><i class="bi bi-bell text-muted" aria-hidden="true"></i></div>
+    <a class="alert-row" href="{% url 'rapports_accueil' %}"><span class="alert-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span><span><strong>Stock faible</strong><small>Médicaments sous leur seuil d’alerte</small></span><span class="alert-count">{{ stock.medicaments_stock_faible|length }}</span></a>
+    <a class="alert-row" href="{% url 'gestion_liste' 'stocks' %}?stock=proches"><span class="alert-icon"><i class="bi bi-hourglass-split" aria-hidden="true"></i></span><span><strong>Péremption proche</strong><small>Lots expirant sous 30 jours</small></span><span class="alert-count">{{ stock.lots_proches_peremption.count }}</span></a>
+    <a class="alert-row" href="{% url 'gestion_liste' 'stocks' %}?stock=perimes"><span class="alert-icon danger"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></span><span><strong>Lots périmés</strong><small>À isoler du stock vendable</small></span><span class="alert-count">{{ stock.lots_perimes.count }}</span></a>
+    {% if mois %}<div class="mt-4 pt-2"><span class="data-note">Solde dû sur les ventes du mois</span><div class="metric mb-0">{{ mois.reste_a_payer|ariary }}</div></div>{% endif %}
+  </section>
+  {% endif %}
+</div>
+<div class="dashboard-bottom">
+  {% if perms.ventes.view_vente %}
+  <section class="surface p-0 table-card"><div class="section-heading p-4 mb-0"><h2>Ventes récentes</h2><a href="{% url 'gestion_liste' 'ventes' %}">Toutes les ventes <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div><div class="table-responsive"><table class="table mb-0"><thead><tr><th>Vente</th><th>Client</th><th>Montant</th><th>État</th></tr></thead><tbody>{% for vente in ventes %}<tr><td><a href="{% url 'vente_detail' vente.pk %}">#{{ vente.pk|stringformat:'05d' }}</a><small class="d-block text-muted mt-1">{{ vente.date_vente|date:'d/m · H:i' }}</small></td><td>{{ vente.client|default:'Client de passage' }}</td><td class="text-nowrap">{{ vente.total|ariary }}</td><td><span class="status-pill {% if vente.statut == 'VALIDEE' %}success{% elif vente.statut == 'ANNULEE' %}danger{% else %}warning{% endif %}">{{ vente.get_statut_display }}</span></td></tr>{% empty %}<tr><td colspan="4"><div class="empty-state"><i class="bi bi-receipt" aria-hidden="true"></i><strong>Votre première vente vous attend</strong>Les dernières ventes apparaîtront ici.</div></td></tr>{% endfor %}</tbody></table></div></section>
+  <section class="surface"><div class="section-heading"><h2>Produits les plus vendus</h2><i class="bi bi-trophy text-muted" aria-hidden="true"></i></div>{% for produit in produits_populaires %}<div class="product-row"><span class="product-rank">{{ forloop.counter|stringformat:'02d' }}</span><span class="product-name">{{ produit.medicament__nom_commercial }}</span><span class="product-quantity">{{ produit.quantite }} <small>u.</small></span></div>{% empty %}<div class="empty-state"><i class="bi bi-capsule" aria-hidden="true"></i><strong>Aucune vente validée</strong>Le classement sera calculé à partir de vos ventes.</div>{% endfor %}<p class="data-note mt-3">Quantités vendues moins retours validés, toutes périodes.</p></section>
+  {% endif %}
+</div>
+{% if achats %}<section class="surface mt-4"><div class="section-heading"><h2>Achats récents</h2><a href="{% url 'gestion_liste' 'achats' %}">Voir les achats</a></div><div class="table-responsive"><table class="table mb-0"><thead><tr><th>Commande</th><th>Fournisseur</th><th>Date</th><th>État</th></tr></thead><tbody>{% for achat in achats %}<tr><td><a href="{% url 'gestion_detail' 'achats' achat.pk %}">#{{ achat.pk|stringformat:'05d' }}</a></td><td>{{ achat.fournisseur }}</td><td>{{ achat.date_commande|date:'d/m/Y' }}</td><td><span class="status-pill">{{ achat.get_statut_display }}</span></td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% if not jour and not stock and not achats %}<section class="surface empty-state"><i class="bi bi-shield-lock" aria-hidden="true"></i><strong>Bienvenue dans PHARMAGEST</strong>Les fonctionnalités s’affichent selon votre rôle. Contactez le responsable si un accès manque.</section>{% endif %}
+{% endblock %}

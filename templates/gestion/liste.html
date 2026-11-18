@@ -1,0 +1,35 @@
+﻿{% extends 'base.html' %}
+{% load pharmagest %}
+{% block content %}
+<div class="page-heading">
+  <div><span class="eyebrow">Espace de gestion</span><h1>{{ titre }}</h1><p>Consultez et suivez vos enregistrements.</p></div>
+  {% if ajout %}{% if slug == 'ventes' %}<a class="btn btn-primary" href="{% url 'vente_creation' %}"><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Nouvelle vente</a>{% else %}<a class="btn btn-primary" href="{% url 'gestion_ajout' slug %}"><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Ajouter</a>{% endif %}{% endif %}
+</div>
+{% if slug == 'stocks' %}
+<nav class="filter-pills" aria-label="Filtrer les lots">
+  <a href="?" class="{% if not filtre_stock %}active{% endif %}">Tous les lots</a>
+  <a href="?stock=proches" class="{% if filtre_stock == 'proches' %}active{% endif %}"><i class="bi bi-hourglass-split" aria-hidden="true"></i>Péremption sous 30 jours</a>
+  <a href="?stock=perimes" class="{% if filtre_stock == 'perimes' %}active{% endif %}"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i>Lots périmés</a>
+  <a href="?stock=bloques" class="{% if filtre_stock == 'bloques' %}active{% endif %}"><i class="bi bi-lock" aria-hidden="true"></i>Lots bloqués</a>
+</nav>
+{% endif %}
+<section class="card table-card" aria-label="Liste des enregistrements">
+  <div class="list-toolbar">
+    <form class="search-form" method="get">
+      {% if filtre_stock %}<input type="hidden" name="stock" value="{{ filtre_stock }}">{% endif %}
+      <div class="search-field"><i class="bi bi-search" aria-hidden="true"></i><label for="recherche" class="visually-hidden">Rechercher dans {{ titre }}</label><input id="recherche" name="q" value="{{ q }}" class="form-control" placeholder="Rechercher…"></div>
+      {% if categories %}<label for="categorie" class="visually-hidden">Catégorie</label><select name="categorie" id="categorie" class="form-select w-auto"><option value="">Toutes les catégories</option>{% for item in categories %}<option value="{{ item.pk }}"{% if categorie == item.pk|stringformat:'s' %} selected{% endif %}>{{ item.nom }}</option>{% endfor %}</select>{% endif %}{% if etats %}<label for="filtre-etat" class="visually-hidden">État</label><select id="filtre-etat" name="etat" class="form-select w-auto"><option value="">Tous les états</option>{% for code, libelle in etats %}<option value="{{ code }}"{% if etat == code %} selected{% endif %}>{{ libelle }}</option>{% endfor %}</select>{% endif %}
+      <label for="tri" class="visually-hidden">Trier les résultats</label><select id="tri" name="tri" class="form-select w-auto">{% for code, libelle in tris %}<option value="{{ code }}"{% if tri == code %} selected{% endif %}>{{ libelle }}</option>{% endfor %}</select>
+      <button class="btn btn-outline-primary">Appliquer</button>
+    </form>
+    <span class="count-label">{{ page.paginator.count }} résultat{{ page.paginator.count|pluralize }}</span>
+  </div>
+  <div class="table-responsive"><table class="table mb-0"><thead><tr><th>Référence</th>{% for colonne in colonnes %}<th>{{ colonne.verbose_name|capfirst }}</th>{% endfor %}<th>Actions</th></tr></thead>
+  <tbody>{% for ligne in lignes %}<tr><td class="table-reference">{% if slug == 'medicaments' and ligne.objet.photo %}<img class="medicine-thumb" src="{{ ligne.objet.photo.url }}" alt="Photo de {{ ligne.objet.nom_commercial }}" loading="lazy">{% endif %}#{{ ligne.objet.pk|stringformat:'05d' }}</td>
+    {% for cellule in ligne.cellules %}<td>{% if cellule.type == 'montant' %}<span class="text-nowrap">{{ cellule.valeur|ariary }}</span>{% elif cellule.type == 'etat' %}<span class="status-pill {{ cellule.ton }}">{{ cellule.valeur }}</span>{% else %}{{ cellule.valeur|default_if_none:'—' }}{% endif %}</td>{% endfor %}
+    <td class="table-actions">{% if slug == 'medicaments' or slug == 'clients' or slug == 'fournisseurs' or slug == 'categories' %}<a href="{% url 'fiche_detail' slug ligne.objet.pk %}">Fiche</a>{% endif %}{% if modification and ligne.modifiable %}<a href="{% url 'gestion_modification' slug ligne.objet.pk %}">Modifier</a>{% endif %}{% if slug == 'ventes' %}<a href="{% url 'vente_detail' ligne.objet.pk %}">Ouvrir <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>{% endif %}{% if slug == 'achats' or slug == 'receptions' or slug == 'stocks' %}<a href="{% url 'gestion_detail' slug ligne.objet.pk %}">Ouvrir <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>{% endif %}{% include 'gestion/actions.html' %}</td>
+  </tr>{% empty %}<tr><td colspan="12"><div class="empty-state"><i class="bi bi-inbox" aria-hidden="true"></i><strong>Aucun enregistrement trouvé</strong>{% if q or etat or filtre_stock %}Essayez une autre recherche ou retirez les filtres.{% else %}Les enregistrements apparaîtront ici dès leur création.{% endif %}</div></td></tr>{% endfor %}</tbody></table></div>
+  <nav class="pagination-bar" aria-label="Pagination"><span>Page {{ page.number }} sur {{ page.paginator.num_pages }}</span><div class="d-flex gap-2">{% if page.has_previous %}<a class="btn btn-sm btn-outline-primary" href="?{{ parametres_pagination }}&page={{ page.previous_page_number }}"><i class="bi bi-chevron-left" aria-hidden="true"></i> Précédent</a>{% endif %}{% if page.has_next %}<a class="btn btn-sm btn-outline-primary" href="?{{ parametres_pagination }}&page={{ page.next_page_number }}">Suivant <i class="bi bi-chevron-right" aria-hidden="true"></i></a>{% endif %}</div></nav>
+</section>
+{% endblock %}
+

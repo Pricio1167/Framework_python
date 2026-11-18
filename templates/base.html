@@ -1,0 +1,57 @@
+﻿{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#17365c">
+  <title>{% block title %}PHARMAGEST · Gestion de pharmacie{% endblock %}</title>
+  <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/pharmagest.css' %}" rel="stylesheet">
+  <script src="{% static 'js/pharmagest.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</head>
+<body class="{% if user.is_authenticated %}connected{% else %}auth-page{% endif %}">
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+{% if user.is_authenticated %}
+<div class="app-layout">
+  <nav id="navigation-principale" class="sidebar" aria-label="Navigation principale">
+    <a class="brand" href="/"><span class="brand-symbol"><i class="bi bi-capsule" aria-hidden="true"></i></span><span>PHARMAGEST<small>Votre pharmacie, en confiance</small></span></a>
+    <div class="sidebar-body">
+      <a class="nav-item {% if request.path == '/' %}active{% endif %}" href="/"{% if request.path == '/' %} aria-current="page"{% endif %}><i class="bi bi-grid-1x2" aria-hidden="true"></i> Tableau de bord</a>
+      {% if perms.ventes.add_vente %}<a class="nav-new-sale" href="{% url 'vente_creation' %}"><i class="bi bi-plus-circle" aria-hidden="true"></i> Nouvelle vente</a>{% endif %}
+      {% for groupe in navigation_groupes %}
+      {% if groupe.avance %}<details class="nav-advanced"{% if groupe.ouvert %} open{% endif %}><summary>{{ groupe.titre }}</summary>{% else %}<p class="nav-section-title">{{ groupe.titre }}</p>{% endif %}
+      {% for lien in groupe.liens %}<a class="nav-item {% if lien.actif %}active{% endif %}" href="{{ lien.url }}"{% if lien.actif %} aria-current="page"{% endif %}><i class="bi bi-{{ lien.icone }}" aria-hidden="true"></i>{{ lien.titre }}</a>{% endfor %}
+      {% if groupe.avance %}</details>{% endif %}
+      {% endfor %}
+      {% if perms.ventes.view_vente or perms.stock.view_lotstock %}<p class="nav-section-title">Analyse</p><a class="nav-item {% if '/rapports/' in request.path %}active{% endif %}" href="{% url 'rapports_accueil' %}"><i class="bi bi-bar-chart" aria-hidden="true"></i> Rapports et analyses</a>{% endif %}
+      {% if perms.utilisateurs.view_utilisateur or perms.dashboard.change_parametrespharmacie or user.is_staff %}<p class="nav-section-title">Administration</p>{% endif %}
+      {% if perms.utilisateurs.view_utilisateur %}<a class="nav-item" href="{% url 'utilisateurs_liste' %}"><i class="bi bi-person-gear" aria-hidden="true"></i> Utilisateurs et rôles</a>{% endif %}
+      {% if perms.dashboard.change_parametrespharmacie %}<a class="nav-item" href="{% url 'parametres_pharmacie' %}"><i class="bi bi-sliders" aria-hidden="true"></i> Paramètres</a>{% endif %}
+      {% if user.is_staff %}<a class="nav-item" href="{% url 'admin:index' %}"><i class="bi bi-shield-check" aria-hidden="true"></i> Administration Django</a>{% endif %}
+    </div>
+    <a class="nav-item mx-3" href="{% url 'password_change' %}"><i class="bi bi-key" aria-hidden="true"></i>Mon mot de passe</a><div class="sidebar-foot"><i class="bi bi-shield-lock" aria-hidden="true"></i> Accès selon votre rôle</div>
+  </nav>
+  <div class="workspace">
+    <header class="topbar">
+      <div class="topbar-location"><button id="menu-toggle" class="icon-button menu-toggle" type="button" aria-expanded="false" aria-controls="navigation-principale" aria-label="Ouvrir le menu"><i class="bi bi-list" aria-hidden="true"></i></button><span class="topbar-breadcrumb">PHARMAGEST <span>/</span> {{ titre|default:'Espace de gestion' }}</span></div>
+      <div class="topbar-user"><span class="user-avatar" aria-hidden="true">{{ user.username|first|upper }}</span><span class="user-name">{{ user.get_full_name|default:user.username }}<small>Session personnelle</small></span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="icon-button" title="Déconnexion" aria-label="Se déconnecter"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></button></form></div>
+    </header>
+    <main id="contenu" class="content" tabindex="-1">
+{% else %}
+<header class="public-header"><a class="brand" href="/"><span class="brand-symbol"><i class="bi bi-capsule" aria-hidden="true"></i></span>PHARMAGEST</a><span>Gestion de pharmacie</span></header>
+<main id="contenu" class="auth-main" tabindex="-1">
+{% endif %}
+      {% for message in messages %}<div role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}" class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}"><i class="bi {% if message.tags == 'error' %}bi-exclamation-circle{% else %}bi-check-circle{% endif %}" aria-hidden="true"></i> {{ message }}</div>{% endfor %}
+      {% block content %}{% endblock %}
+{% if user.is_authenticated %}
+    </main>
+    <footer class="workspace-footer">PHARMAGEST <span>Gestion de pharmacie · Ariary (Ar)</span></footer>
+  </div>
+</div>
+{% else %}</main>{% endif %}
+</body>
+</html>
+

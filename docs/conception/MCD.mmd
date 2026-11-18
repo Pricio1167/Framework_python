@@ -1,0 +1,25 @@
+erDiagram
+  CATEGORIE ||--o{ MEDICAMENT : classe
+  MEDICAMENT ||--o{ LOT_STOCK : possede
+  FOURNISSEUR ||--o{ COMMANDE_ACHAT : fournit
+  COMMANDE_ACHAT ||--o{ LIGNE_ACHAT : contient
+  MEDICAMENT ||--o{ LIGNE_ACHAT : commande
+  COMMANDE_ACHAT ||--o{ RECEPTION_ACHAT : receptionne
+  RECEPTION_ACHAT ||--o{ LIGNE_RECEPTION : contient
+  LIGNE_ACHAT ||--o{ LIGNE_RECEPTION : realise
+  LOT_STOCK ||--o{ MOUVEMENT_STOCK : trace
+  CLIENT o|--o{ VENTE : concerne
+  VENTE ||--o{ LIGNE_VENTE : contient
+  MEDICAMENT ||--o{ LIGNE_VENTE : vendu
+  LIGNE_VENTE ||--o{ LIGNE_VENTE_LOT : alloue
+  LOT_STOCK ||--o{ LIGNE_VENTE_LOT : delivre
+  VENTE ||--o{ PAIEMENT : regle
+  VENTE ||--o{ RETOUR_VENTE : corrige
+  RETOUR_VENTE ||--o{ LIGNE_RETOUR : contient
+  LIGNE_VENTE ||--o{ LIGNE_RETOUR : retourne
+  LOT_STOCK o|--o{ LIGNE_RETOUR : identifie
+  LIGNE_RETOUR ||--o| DECISION_QUARANTAINE : statue
+  RETOUR_VENTE ||--o{ REMBOURSEMENT : compense
+  UTILISATEUR ||--o{ VENTE : enregistre
+  UTILISATEUR ||--o{ COMMANDE_ACHAT : cree
+  UTILISATEUR ||--o{ EVENEMENT_AUDIT : auteur

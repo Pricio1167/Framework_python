@@ -1,0 +1,14 @@
+flowchart LR
+  A[Administrateur] --> U[Comptes rôles paramètres]
+  A --> T[Toutes les opérations autorisées]
+  P[Pharmacien] --> V[Ventes délivrance retours]
+  P --> E[Vérification des paiements électroniques]
+  G[Gestionnaire de stock] --> S[Médicaments fournisseurs achats réceptions inventaires]
+  C[Caissier] --> B[Brouillons de vente clients paiements reçus]
+  R[Responsable de gestion] --> K[Statistiques achats et rapports en consultation]
+  U --> X[Permissions Django et contrôle serveur]
+  V --> X
+  E --> X
+  S --> X
+  B --> X
+  K --> X

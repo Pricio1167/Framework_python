@@ -7,6 +7,16 @@ from django.utils import timezone
 
 from stock.models import LotStock, MouvementStock
 from .models import Vente
+from .models import Vente, LigneVenteLot
+
+from collections import defaultdict
+
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.utils import timezone
+
+from stock.models import LotStock, MouvementStock
+from .models import Vente, LigneVenteLot
 
 
 @transaction.atomic
@@ -19,15 +29,12 @@ def valider_vente(vente_id):
         )
 
     lignes = list(
-        vente.lignes.select_related("medicament")
+        vente.lignes.select_related("medicament").order_by("pk")
     )
 
     if not lignes:
-        raise ValidationError(
-            "Impossible de valider une vente vide."
-        )
+        raise ValidationError("Impossible de valider une vente vide.")
 
-    # Regrouper les quantités par médicament.
     demandes = defaultdict(int)
 
     for ligne in lignes:
@@ -41,16 +48,16 @@ def valider_vente(vente_id):
             raise ValidationError(
                 f"{ligne.medicament} est inactif."
             )
+        if ligne.medicament.prescription_requise and not vente.controle_delivrance.get("reference"):
+            raise ValidationError("Le contrôle professionnel de la prescription n’a pas été enregistré.")
 
         demandes[ligne.medicament_id] += ligne.quantite
 
-    # Verrouiller les lots et préparer les sorties FEFO.
     aujourd_hui = timezone.localdate()
-    allocations = []
+    lots_par_medicament = {}
 
+    # Vérifier tout le stock avant de modifier les quantités
     for medicament_id in sorted(demandes):
-        quantite_restante = demandes[medicament_id]
-
         lots = list(
             LotStock.objects.select_for_update()
             .filter(
@@ -62,41 +69,73 @@ def valider_vente(vente_id):
             .order_by("date_peremption", "pk")
         )
 
-        for lot in lots:
+        if sum(lot.quantite for lot in lots) < demandes[medicament_id]:
+            raise ValidationError(
+                f"Stock insuffisant pour le médicament "
+                f"n°{medicament_id}."
+            )
+
+        lots_par_medicament[medicament_id] = lots
+
+    # Affecter les lots à chaque ligne de vente
+    reserves = defaultdict(int)
+    for ligne in lignes:
+        if ligne.lot_demande_id:
+            candidats = {lot.pk: lot for lot in lots_par_medicament[ligne.medicament_id]}
+            if ligne.lot_demande_id not in candidats:
+                raise ValidationError("Le lot demandé est bloqué, périmé ou ne correspond pas au médicament.")
+            reserves[ligne.lot_demande_id] += ligne.quantite
+            if reserves[ligne.lot_demande_id] > candidats[ligne.lot_demande_id].quantite:
+                raise ValidationError("Stock insuffisant dans le lot demandé.")
+    for ligne in lignes:
+        quantite_restante = ligne.quantite
+
+        for lot in lots_par_medicament[ligne.medicament_id]:
+            if ligne.lot_demande_id and lot.pk != ligne.lot_demande_id:
+                continue
             if quantite_restante == 0:
                 break
 
+            if lot.quantite == 0:
+                continue
+
             quantite_prelevee = min(
-                lot.quantite,
-                quantite_restante
+                lot.quantite if ligne.lot_demande_id else max(0, lot.quantite - reserves[lot.pk]),
+                quantite_restante,
+            )
+            if quantite_prelevee == 0:
+                continue
+            if ligne.lot_demande_id:
+                reserves[lot.pk] -= quantite_prelevee
+
+            lot.quantite -= quantite_prelevee
+            lot.save(update_fields=["quantite"])
+
+            LigneVenteLot.objects.create(
+                ligne_vente=ligne,
+                lot=lot,
+                quantite=quantite_prelevee,
             )
 
-            allocations.append(
-                (lot, quantite_prelevee)
+            MouvementStock.objects.create(
+                lot=lot,
+                type_mouvement="SORTIE",
+                quantite=quantite_prelevee,
+                motif=f"Vente numéro {vente.pk}",
+                utilisateur=vente.utilisateur,
             )
 
             quantite_restante -= quantite_prelevee
 
-        if quantite_restante > 0:
-            raise ValidationError(
-                "Stock insuffisant pour le médicament "
-                f"n°{medicament_id}."
-            )
-
-    # Déduire le stock uniquement après vérification.
-    for lot, quantite in allocations:
-        lot.quantite -= quantite
-        lot.save(update_fields=["quantite"])
-
-        MouvementStock.objects.create(
-            lot=lot,
-            type_mouvement="SORTIE",
-            quantite=quantite,
-            motif=f"Vente numéro {vente.pk}",
-            utilisateur=vente.utilisateur,
-        )
-
     vente.statut = "VALIDEE"
-    vente.save(update_fields=["statut"])
+    from dashboard.parametres import identite_pharmacie
+    vente.instantane_facture = {
+        **identite_pharmacie(),
+        "client": str(vente.client) if vente.client else "Client de passage",
+        "lignes": [{"medicament": str(ligne.medicament), "quantite": ligne.quantite,
+                    "prix_unitaire": str(ligne.prix_unitaire), "sous_total": str(ligne.sous_total)}
+                   for ligne in lignes],
+    }
+    vente.save(update_fields=["statut", "instantane_facture"])
 
     return vente

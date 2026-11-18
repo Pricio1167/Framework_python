@@ -1,0 +1,35 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<h1>Rapports et analyses</h1>
+<form method="get" class="card p-4 mb-4">
+  {{ form.as_p }}
+  <button class="btn btn-primary align-self-start">Appliquer la période</button>
+</form>
+{% if ventes %}
+<section class="card p-4 mb-4" aria-labelledby="ventes-rapport">
+  <h2 id="ventes-rapport" class="h4">Ventes de la période</h2>
+  <p>La période sélectionne les ventes par date de création. Les retours et paiements associés sont cumulés sur ces ventes.</p>
+  <dl class="row">
+    <dt class="col-sm-7">Nombre de ventes validées</dt><dd class="col-sm-5">{{ ventes.nombre_ventes }}</dd>
+    <dt class="col-sm-7">Chiffre d’affaires brut</dt><dd class="col-sm-5">{{ ventes.chiffre_affaires }} Ar</dd>
+    <dt class="col-sm-7">Retours validés</dt><dd class="col-sm-5">{{ ventes.retours }} Ar</dd>
+    <dt class="col-sm-7">Chiffre d’affaires net</dt><dd class="col-sm-5">{{ ventes.chiffre_affaires_net }} Ar</dd>
+    <dt class="col-sm-7">Montant encaissé</dt><dd class="col-sm-5">{{ ventes.montant_encaisse }} Ar</dd>
+    <dt class="col-sm-7">Remboursements</dt><dd class="col-sm-5">{{ ventes.remboursements }} Ar</dd>
+    <dt class="col-sm-7">Encaissement net</dt><dd class="col-sm-5">{{ ventes.encaissement_net }} Ar</dd>
+    <dt class="col-sm-7">Reste à payer</dt><dd class="col-sm-5">{{ ventes.reste_a_payer }} Ar</dd>
+  </dl>
+  <a class="btn btn-outline-primary align-self-start" href="{% url 'rapport_ventes_pdf' %}?{{ request.GET.urlencode }}">Télécharger le rapport PDF</a>
+</section>
+{% endif %}
+{% include 'rapports/achats.html' %}{% if stocks %}
+<section class="card p-4" aria-labelledby="stock-rapport">
+  <h2 id="stock-rapport" class="h4">Alertes de stock actuelles</h2>
+  <p>Ces données décrivent le stock actuel et ne dépendent pas de la période des ventes.</p>
+  <ul>{% for alerte in stocks.medicaments_stock_faible %}<li>{{ alerte.medicament }} : {{ alerte.quantite }} unités (seuil {{ alerte.seuil }})</li>{% empty %}<li>Aucun médicament sous le seuil d’alerte.</li>{% endfor %}</ul>
+  <p><a href="{% url 'gestion_liste' 'stocks' %}?stock=proches">{{ stocks.lots_proches_peremption.count }} lots proches de la péremption</a> · <a href="{% url 'gestion_liste' 'stocks' %}?stock=perimes">{{ stocks.lots_perimes.count }} lots périmés</a></p>
+  <a class="btn btn-outline-primary align-self-start mb-2" href="{% url 'rapport_peremptions_pdf' %}">Liste des péremptions PDF</a><a class="btn btn-outline-primary align-self-start" href="{% url 'rapport_stocks_pdf' %}">Télécharger le rapport des stocks PDF</a>
+</section>
+{% endif %}
+{% endblock %}
+

@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator
 
 
 class CommandeAchat(models.Model):
+    instantane_document = models.JSONField(default=dict, blank=True, editable=False)
 
     STATUTS = [
         ("BROUILLON", "Brouillon"),
@@ -44,6 +45,10 @@ class CommandeAchat(models.Model):
     def __str__(self):
         return f"Commande N°{self.pk}"
 
+    @property
+    def total(self):
+        return sum((ligne.sous_total for ligne in self.lignes.all()), Decimal("0.00"))
+
 
 class LigneAchat(models.Model):
 
@@ -79,6 +84,7 @@ class LigneAchat(models.Model):
 
 
 class ReceptionAchat(models.Model):
+    instantane_document = models.JSONField(default=dict, blank=True, editable=False)
 
     commande = models.ForeignKey(
         CommandeAchat,
@@ -106,6 +112,11 @@ class ReceptionAchat(models.Model):
 
     def __str__(self):
         return f"Réception N°{self.pk}"
+
+    @property
+    def total(self):
+        return sum((ligne.quantite_recue * ligne.ligne_achat.prix_unitaire
+                    for ligne in self.lignes.select_related("ligne_achat")), Decimal("0.00"))
 
 class LigneReception(models.Model):
     reception = models.ForeignKey(

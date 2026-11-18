@@ -1,0 +1,2243 @@
+[
+  {
+    "modele": "utilisateurs.Utilisateur",
+    "table": "utilisateurs_utilisateur",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "password",
+        "colonne": "password",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 128,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "last_login",
+        "colonne": "last_login",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "is_superuser",
+        "colonne": "is_superuser",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "username",
+        "colonne": "username",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": 150,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "first_name",
+        "colonne": "first_name",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 150,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "last_name",
+        "colonne": "last_name",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 150,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "email",
+        "colonne": "email",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 254,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "is_staff",
+        "colonne": "is_staff",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "is_active",
+        "colonne": "is_active",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_joined",
+        "colonne": "date_joined",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "telephone",
+        "colonne": "telephone",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [
+      {
+        "champ": "groups",
+        "table_intermediaire": "utilisateurs_utilisateur_groups",
+        "cible": "auth.Group"
+      },
+      {
+        "champ": "user_permissions",
+        "table_intermediaire": "utilisateurs_utilisateur_user_permissions",
+        "cible": "auth.Permission"
+      }
+    ],
+    "contraintes": []
+  },
+  {
+    "modele": "medicaments.Categorie",
+    "table": "medicaments_categorie",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "nom",
+        "colonne": "nom",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": 100,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "description",
+        "colonne": "description",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "medicaments.Medicament",
+    "table": "medicaments_medicament",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "nom_commercial",
+        "colonne": "nom_commercial",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 200,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "denomination_generique",
+        "colonne": "denomination_generique",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 200,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "categorie",
+        "colonne": "categorie_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "medicaments.Categorie",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "forme",
+        "colonne": "forme",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 30,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "comprime",
+            "Comprimé"
+          ],
+          [
+            "gelule",
+            "Gélule"
+          ],
+          [
+            "sirop",
+            "Sirop"
+          ],
+          [
+            "injectable",
+            "Injectable"
+          ],
+          [
+            "pommade",
+            "Pommade"
+          ],
+          [
+            "autre",
+            "Autre"
+          ]
+        ]
+      },
+      {
+        "nom": "dosage",
+        "colonne": "dosage",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 100,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "laboratoire",
+        "colonne": "laboratoire",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 150,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "code_barres",
+        "colonne": "code_barres",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": true,
+        "null": true,
+        "cible": null,
+        "max_length": 100,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "photo",
+        "colonne": "photo",
+        "type": "FileField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": null,
+        "max_length": 100,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "prix_achat",
+        "colonne": "prix_achat",
+        "type": "DecimalField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": 12,
+        "decimal_places": 2,
+        "choix": []
+      },
+      {
+        "nom": "prix_vente",
+        "colonne": "prix_vente",
+        "type": "DecimalField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": 12,
+        "decimal_places": 2,
+        "choix": []
+      },
+      {
+        "nom": "seuil_alerte",
+        "colonne": "seuil_alerte",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "actif",
+        "colonne": "actif",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "prescription_requise",
+        "colonne": "prescription_requise",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "fournisseurs.Fournisseur",
+    "table": "fournisseurs_fournisseur",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "nom",
+        "colonne": "nom",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 200,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "adresse",
+        "colonne": "adresse",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "telephone",
+        "colonne": "telephone",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "email",
+        "colonne": "email",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 254,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "numero_fiscal",
+        "colonne": "numero_fiscal",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 100,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "contact_principal",
+        "colonne": "contact_principal",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 150,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "actif",
+        "colonne": "actif",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "clients.Client",
+    "table": "clients_client",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "nom",
+        "colonne": "nom",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 150,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "telephone",
+        "colonne": "telephone",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "email",
+        "colonne": "email",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 254,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "adresse",
+        "colonne": "adresse",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "actif",
+        "colonne": "actif",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "achats.CommandeAchat",
+    "table": "achats_commandeachat",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "instantane_document",
+        "colonne": "instantane_document",
+        "type": "JSONField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "fournisseur",
+        "colonne": "fournisseur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "fournisseurs.Fournisseur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_commande",
+        "colonne": "date_commande",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "statut",
+        "colonne": "statut",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "BROUILLON",
+            "Brouillon"
+          ],
+          [
+            "COMMANDEE",
+            "Commandée"
+          ],
+          [
+            "PARTIELLE",
+            "Partiellement réceptionnée"
+          ],
+          [
+            "RECUE",
+            "Entièrement réceptionnée"
+          ],
+          [
+            "ANNULEE",
+            "Annulée"
+          ]
+        ]
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "achats.LigneAchat",
+    "table": "achats_ligneachat",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "commande",
+        "colonne": "commande_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "achats.CommandeAchat",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "medicament",
+        "colonne": "medicament_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "medicaments.Medicament",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "quantite",
+        "colonne": "quantite",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "prix_unitaire",
+        "colonne": "prix_unitaire",
+        "type": "DecimalField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": 12,
+        "decimal_places": 2,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "achats.ReceptionAchat",
+    "table": "achats_receptionachat",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "instantane_document",
+        "colonne": "instantane_document",
+        "type": "JSONField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "commande",
+        "colonne": "commande_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "achats.CommandeAchat",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_reception",
+        "colonne": "date_reception",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "validee",
+        "colonne": "validee",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "achats.LigneReception",
+    "table": "achats_lignereception",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "reception",
+        "colonne": "reception_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "achats.ReceptionAchat",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "ligne_achat",
+        "colonne": "ligne_achat_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "achats.LigneAchat",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "numero_lot",
+        "colonne": "numero_lot",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 100,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_peremption",
+        "colonne": "date_peremption",
+        "type": "DateField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "quantite_recue",
+        "colonne": "quantite_recue",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "stock.LotStock",
+    "table": "stock_lotstock",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "medicament",
+        "colonne": "medicament_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "medicaments.Medicament",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "numero_lot",
+        "colonne": "numero_lot",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 100,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_peremption",
+        "colonne": "date_peremption",
+        "type": "DateField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "quantite",
+        "colonne": "quantite",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "quantite_recue",
+        "colonne": "quantite_recue",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "bloque",
+        "colonne": "bloque",
+        "type": "BooleanField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": [
+      {
+        "nom": "unique_lot_par_medicament",
+        "type": "UniqueConstraint"
+      }
+    ]
+  },
+  {
+    "modele": "stock.MouvementStock",
+    "table": "stock_mouvementstock",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "lot",
+        "colonne": "lot_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "stock.LotStock",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "type_mouvement",
+        "colonne": "type_mouvement",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "ENTREE",
+            "Entrée"
+          ],
+          [
+            "SORTIE",
+            "Sortie"
+          ],
+          [
+            "CORRECTION",
+            "Correction"
+          ],
+          [
+            "RETOUR",
+            "Retour"
+          ]
+        ]
+      },
+      {
+        "nom": "quantite",
+        "colonne": "quantite",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "motif",
+        "colonne": "motif",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_mouvement",
+        "colonne": "date_mouvement",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.Vente",
+    "table": "ventes_vente",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "client",
+        "colonne": "client_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": "clients.Client",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_vente",
+        "colonne": "date_vente",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "instantane_facture",
+        "colonne": "instantane_facture",
+        "type": "JSONField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "controle_delivrance",
+        "colonne": "controle_delivrance",
+        "type": "JSONField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "statut",
+        "colonne": "statut",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "BROUILLON",
+            "Brouillon"
+          ],
+          [
+            "VALIDEE",
+            "Validée"
+          ],
+          [
+            "ANNULEE",
+            "Annulée"
+          ]
+        ]
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.LigneVente",
+    "table": "ventes_lignevente",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "lot_demande",
+        "colonne": "lot_demande_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": "stock.LotStock",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "vente",
+        "colonne": "vente_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "ventes.Vente",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "medicament",
+        "colonne": "medicament_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "medicaments.Medicament",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "quantite",
+        "colonne": "quantite",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "prix_unitaire",
+        "colonne": "prix_unitaire",
+        "type": "DecimalField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": 12,
+        "decimal_places": 2,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.Paiement",
+    "table": "ventes_paiement",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "cle_operation",
+        "colonne": "cle_operation",
+        "type": "UUIDField",
+        "cle_primaire": false,
+        "unique": true,
+        "null": true,
+        "cible": null,
+        "max_length": 32,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "statut",
+        "colonne": "statut",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 15,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "CONFIRME",
+            "Confirmé"
+          ],
+          [
+            "EN_ATTENTE",
+            "En attente"
+          ],
+          [
+            "REFUSE",
+            "Refusé"
+          ]
+        ]
+      },
+      {
+        "nom": "reference_verification",
+        "colonne": "reference_verification",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 200,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "verifie_par",
+        "colonne": "verifie_par_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_verification",
+        "colonne": "date_verification",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "vente",
+        "colonne": "vente_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "ventes.Vente",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "montant",
+        "colonne": "montant",
+        "type": "DecimalField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": 12,
+        "decimal_places": 2,
+        "choix": []
+      },
+      {
+        "nom": "mode",
+        "colonne": "mode",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "ESPECES",
+            "Espèces"
+          ],
+          [
+            "CARTE",
+            "Carte bancaire"
+          ],
+          [
+            "MOBILE",
+            "Mobile Money"
+          ]
+        ]
+      },
+      {
+        "nom": "date_paiement",
+        "colonne": "date_paiement",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": [
+      {
+        "nom": "reference_electronique_confirmee_unique",
+        "type": "UniqueConstraint"
+      }
+    ]
+  },
+  {
+    "modele": "ventes.RetourVente",
+    "table": "ventes_retourvente",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "vente",
+        "colonne": "vente_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "ventes.Vente",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_retour",
+        "colonne": "date_retour",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "statut",
+        "colonne": "statut",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "BROUILLON",
+            "Brouillon"
+          ],
+          [
+            "VALIDE",
+            "Validé"
+          ],
+          [
+            "REFUSE",
+            "Refusé"
+          ]
+        ]
+      },
+      {
+        "nom": "motif",
+        "colonne": "motif",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.LigneRetour",
+    "table": "ventes_ligneretour",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "lot_origine",
+        "colonne": "lot_origine_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": "stock.LotStock",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "retour",
+        "colonne": "retour_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "ventes.RetourVente",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "ligne_vente",
+        "colonne": "ligne_vente_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "ventes.LigneVente",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "quantite",
+        "colonne": "quantite",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.LigneVenteLot",
+    "table": "ventes_ligneventelot",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "ligne_vente",
+        "colonne": "ligne_vente_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "ventes.LigneVente",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "lot",
+        "colonne": "lot_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "stock.LotStock",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "quantite",
+        "colonne": "quantite",
+        "type": "PositiveIntegerField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.Remboursement",
+    "table": "ventes_remboursement",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "cle_operation",
+        "colonne": "cle_operation",
+        "type": "UUIDField",
+        "cle_primaire": false,
+        "unique": true,
+        "null": true,
+        "cible": null,
+        "max_length": 32,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "retour",
+        "colonne": "retour_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "ventes.RetourVente",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "montant",
+        "colonne": "montant",
+        "type": "DecimalField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": 12,
+        "decimal_places": 2,
+        "choix": []
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "motif",
+        "colonne": "motif",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.EvenementAudit",
+    "table": "ventes_evenementaudit",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "acteur",
+        "colonne": "acteur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "action",
+        "colonne": "action",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 60,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "objet",
+        "colonne": "objet",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 150,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "motif",
+        "colonne": "motif",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "ventes.DecisionQuarantaine",
+    "table": "ventes_decisionquarantaine",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "ligne_retour",
+        "colonne": "ligne_retour_id",
+        "type": "OneToOneField",
+        "cle_primaire": false,
+        "unique": true,
+        "null": false,
+        "cible": "ventes.LigneRetour",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "decision",
+        "colonne": "decision",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 20,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": [
+          [
+            "DESTRUCTION",
+            "À détruire"
+          ],
+          [
+            "CONSERVER",
+            "Conserver hors vente"
+          ],
+          [
+            "REINTEGRER",
+            "Remise en stock autorisée"
+          ]
+        ]
+      },
+      {
+        "nom": "lot",
+        "colonne": "lot_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": true,
+        "cible": "stock.LotStock",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "motif",
+        "colonne": "motif",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "utilisateur",
+        "colonne": "utilisateur_id",
+        "type": "ForeignKey",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": "utilisateurs.Utilisateur",
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "date_creation",
+        "colonne": "date_creation",
+        "type": "DateTimeField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  },
+  {
+    "modele": "dashboard.ParametresPharmacie",
+    "table": "dashboard_parametrespharmacie",
+    "champs": [
+      {
+        "nom": "id",
+        "colonne": "id",
+        "type": "BigAutoField",
+        "cle_primaire": true,
+        "unique": true,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "nom",
+        "colonne": "nom",
+        "type": "CharField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": 200,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "adresse",
+        "colonne": "adresse",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      },
+      {
+        "nom": "mentions",
+        "colonne": "mentions",
+        "type": "TextField",
+        "cle_primaire": false,
+        "unique": false,
+        "null": false,
+        "cible": null,
+        "max_length": null,
+        "max_digits": null,
+        "decimal_places": null,
+        "choix": []
+      }
+    ],
+    "relations_n_n": [],
+    "contraintes": []
+  }
+]

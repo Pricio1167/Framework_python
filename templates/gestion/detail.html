@@ -1,0 +1,32 @@
+﻿{% extends 'base.html' %}
+{% load pharmagest %}{% block content %}
+<h1>{{ objet }}</h1>{% if slug == 'achats' or slug == 'receptions' %}<p>Total : <strong>{{ objet.total|ariary }}</strong></p>{% if slug == 'achats' and objet.statut != 'BROUILLON' %}<a class="btn btn-outline-primary mb-3" href="{% url 'bon_commande_pdf' objet.pk %}">Bon de commande PDF</a>{% elif slug == 'receptions' and objet.validee %}<a class="btn btn-outline-primary mb-3" href="{% url 'bon_reception_pdf' objet.pk %}">Bon de réception PDF</a>{% endif %}{% endif %}
+{% if slug == 'achats' %}
+<p>{{ objet.fournisseur }} · {{ objet.get_statut_display }}</p>
+<a class="btn btn-outline-primary mb-3" href="{% url 'gestion_ajout' 'receptions' %}?commande={{ objet.pk }}">Préparer une réception</a>
+{% elif slug == 'receptions' %}
+<p>{{ objet.commande }} · {{ objet.validee|yesno:'Validée,En préparation' }}</p>
+{% else %}
+<p>{{ objet.medicament }} · Péremption {{ objet.date_peremption }} · Quantité {{ objet.quantite }} · {{ objet.bloque|yesno:'Bloqué,Non bloqué' }}</p>
+{% endif %}
+{% if slug != 'stocks' %}
+<div class="card p-3 mb-4"><ul>
+{% for ligne in lignes %}<li>{{ ligne }} {% if slug == 'achats' %}· {{ ligne.prix_unitaire }} Ar · {{ ligne.sous_total }} Ar{% else %}· {{ ligne.numero_lot }} · {{ ligne.date_peremption }}{% endif %}</li>{% empty %}<li>Aucune ligne.</li>{% endfor %}
+</ul></div>
+{% if slug == 'achats' and perms.achats.change_commandeachat and objet.statut == 'BROUILLON' or slug == 'receptions' and perms.achats.change_receptionachat and not objet.validee %}
+<form method="post" action="{% url 'gestion_operation' slug objet.pk %}" class="mb-4" data-confirm="Confirmer cette opération ?">{% csrf_token %}<button class="btn btn-primary">Confirmer {% if slug == 'achats' %}la commande{% else %}la réception et les entrées de stock{% endif %}</button></form>
+{% endif %}
+{% if slug == 'achats' and perms.achats.change_commandeachat %}{% if objet.statut == 'BROUILLON' or objet.statut == 'COMMANDEE' %}<details class="mb-4"><summary>Annuler la commande sans réception validée</summary><form method="post" action="{% url 'gestion_operation' slug objet.pk %}" data-confirm="Annuler cette commande ?">{% csrf_token %}<input type="hidden" name="action" value="annuler"><label>Motif<input name="motif" class="form-control my-2" required></label><button class="btn btn-outline-danger">Annuler</button></form></details>{% endif %}{% endif %}{% if form %}<section class="card p-4"><h2 class="h4">Ajouter une ligne</h2><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Ajouter</button></form></section>{% endif %}
+{% else %}
+{% if perms.stock.change_lotstock and perms.stock.add_mouvementstock %}
+<details class="card p-4 mb-4"><summary>Entrée ou sortie de stock justifiée</summary>
+<form method="post" action="{% url 'gestion_operation' 'stocks' objet.pk %}" data-confirm="Confirmer ce mouvement de stock ?">{% csrf_token %}
+<label for="mouvement-type">Type de mouvement</label><select id="mouvement-type" name="action" class="form-control mb-3"><option value="ENTREE">Entrée exceptionnelle</option><option value="SORTIE">Sortie hors vente</option></select>
+<label for="mouvement-quantite">Quantité</label><input id="mouvement-quantite" name="quantite" type="number" min="1" required class="form-control mb-3">
+<label for="mouvement-motif">Justification</label><textarea id="mouvement-motif" name="motif" required class="form-control mb-3"></textarea>
+<button class="btn btn-primary">Enregistrer le mouvement</button></form></details>
+{% endif %}
+<h2 class="h4">Historique des mouvements</h2><div class="table-responsive"><table class="table"><thead><tr><th>Date</th><th>Type</th><th>Quantité</th><th>Motif</th><th>Utilisateur</th></tr></thead><tbody>{% for mouvement in mouvements %}<tr><td>{{ mouvement.date_mouvement }}</td><td>{{ mouvement.get_type_mouvement_display }}</td><td>{{ mouvement.quantite }}</td><td>{{ mouvement.motif }}</td><td>{{ mouvement.utilisateur }}</td></tr>{% empty %}<tr><td colspan="5">Aucun mouvement.</td></tr>{% endfor %}</tbody></table></div>
+{% endif %}
+{% endblock %}
+

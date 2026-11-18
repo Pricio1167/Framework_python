@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: pharmagest
+      POSTGRES_USER: pharmagest
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Définir DB_PASSWORD}
+    volumes:
+      - donnees_pg:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pharmagest -d pharmagest"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  app:
+    build: .
+    environment:
+      DEBUG: "false"
+      SECRET_KEY: ${SECRET_KEY:?Définir SECRET_KEY}
+      ALLOWED_HOSTS: ${PHARMAGEST_DOMAIN:?Définir PHARMAGEST_DOMAIN}
+      CSRF_TRUSTED_ORIGINS: https://${PHARMAGEST_DOMAIN}
+      TRUST_PROXY: "true"
+      DB_ENGINE: postgresql
+      DB_NAME: pharmagest
+      DB_USER: pharmagest
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: "5432"
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.smtp.EmailBackend}
+      EMAIL_HOST: ${EMAIL_HOST:-localhost}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS:-true}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-webmaster@localhost}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - statiques:/app/staticfiles
+      - medias:/app/media
+    restart: unless-stopped
+  https:
+    image: caddy:2
+    environment:
+      PHARMAGEST_DOMAIN: ${PHARMAGEST_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - statiques:/srv/static:ro
+      - medias:/srv/media:ro
+      - certificats:/data
+      - configuration_https:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+volumes:
+  donnees_pg:
+  statiques:
+  medias:
+  certificats:
+  configuration_https:

@@ -2,6 +2,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from .validators import valider_photo
 
 
 class Categorie(models.Model):
@@ -71,6 +72,7 @@ class Medicament(models.Model):
 
     photo = models.ImageField(
         upload_to="medicaments/",
+        validators=[valider_photo],
         blank=True,
         null=True
     )
@@ -98,6 +100,7 @@ class Medicament(models.Model):
     actif = models.BooleanField(
         default=True
     )
+    prescription_requise = models.BooleanField(default=False, verbose_name="Prescription requise selon la politique validée")
 
     date_creation = models.DateTimeField(
         auto_now_add=True

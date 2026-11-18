@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Paramètres de la pharmacie</h1><p>Renseignez uniquement les informations réelles et les mentions validées par le responsable de la pharmacie.</p><div class="card p-4"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Enregistrer</button></form></div>{% endblock %}

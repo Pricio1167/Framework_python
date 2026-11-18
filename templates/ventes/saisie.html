@@ -1,0 +1,27 @@
+{% if vente.statut == 'BROUILLON' and perms.ventes.add_lignevente %}
+<section class="card p-4 mb-4" aria-labelledby="ajout-ligne">
+  <h2 class="h4" id="ajout-ligne">Ajouter un médicament</h2>
+  <form method="get" class="d-flex gap-2 mb-3"><label class="visually-hidden" for="produit-code">Nom ou code-barres</label><input id="produit-code" name="produit" value="{{ recherche_produit }}" class="form-control" placeholder="Nom ou scanner le code-barres"><button class="btn btn-outline-primary">Rechercher</button></form>
+  <form method="post" action="{% url 'vente_ligne_ajouter' vente.pk %}">
+    {% csrf_token %}{{ ligne_form.as_p }}
+    <button class="btn btn-primary">Ajouter à la vente</button>
+  </form>
+</section>
+{% endif %}
+{% if vente.statut == 'VALIDEE' and perms.ventes.add_retourvente and perms.ventes.add_ligneretour %}
+<details class="card p-4 mb-4">
+  <summary>Demander un retour sur cette vente</summary>
+  <form method="post" action="{% url 'vente_demander_retour' vente.pk %}">
+    {% csrf_token %}
+    <p>Indiquez uniquement les quantités concernées. Les produits restent hors vente après validation.</p>
+    {% for ligne in vente.lignes.all %}
+    <label class="d-block mb-2" for="retour-{{ ligne.pk }}">{{ ligne.medicament }} (vendu : {{ ligne.quantite }})</label>
+    <input class="form-control mb-3" id="retour-{{ ligne.pk }}" name="quantite_{{ ligne.pk }}" type="number" min="0" max="{{ ligne.quantite }}" value="0">
+    <label for="retour-lot-{{ ligne.pk }}">Lot retourné</label><select id="retour-lot-{{ ligne.pk }}" name="lot_{{ ligne.pk }}" class="form-select mb-3">{% for allocation in ligne.lots_utilises.all %}<option value="{{ allocation.lot_id }}">{{ allocation.lot.numero_lot }} · {{ allocation.quantite }} unités délivrées · {{ allocation.lot.date_peremption }}</option>{% endfor %}</select>
+    {% endfor %}
+    <label for="motif-retour">Motif du retour</label>
+    <textarea id="motif-retour" class="form-control mb-3" name="motif" required></textarea>
+    <button class="btn btn-outline-primary">Créer la demande</button>
+  </form>
+</details>
+{% endif %}

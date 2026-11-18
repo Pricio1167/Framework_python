@@ -1,0 +1,224 @@
+classDiagram
+  class Utilisateur {
+    BigAutoField id
+    CharField password
+    DateTimeField last_login
+    BooleanField is_superuser
+    CharField username
+    CharField first_name
+    CharField last_name
+    CharField email
+    BooleanField is_staff
+    BooleanField is_active
+    DateTimeField date_joined
+    CharField telephone
+    DateTimeField date_creation
+  }
+  class Categorie {
+    BigAutoField id
+    CharField nom
+    TextField description
+  }
+  class Medicament {
+    BigAutoField id
+    CharField nom_commercial
+    CharField denomination_generique
+    ForeignKey categorie
+    CharField forme
+    CharField dosage
+    CharField laboratoire
+    CharField code_barres
+    FileField photo
+    DecimalField prix_achat
+    DecimalField prix_vente
+    PositiveIntegerField seuil_alerte
+    BooleanField actif
+    BooleanField prescription_requise
+    DateTimeField date_creation
+  }
+  class Fournisseur {
+    BigAutoField id
+    CharField nom
+    TextField adresse
+    CharField telephone
+    CharField email
+    CharField numero_fiscal
+    CharField contact_principal
+    BooleanField actif
+    DateTimeField date_creation
+  }
+  class Client {
+    BigAutoField id
+    CharField nom
+    CharField telephone
+    CharField email
+    TextField adresse
+    BooleanField actif
+    DateTimeField date_creation
+  }
+  class CommandeAchat {
+    BigAutoField id
+    JSONField instantane_document
+    ForeignKey fournisseur
+    DateTimeField date_commande
+    CharField statut
+    ForeignKey utilisateur
+  }
+  class LigneAchat {
+    BigAutoField id
+    ForeignKey commande
+    ForeignKey medicament
+    PositiveIntegerField quantite
+    DecimalField prix_unitaire
+  }
+  class ReceptionAchat {
+    BigAutoField id
+    JSONField instantane_document
+    ForeignKey commande
+    DateTimeField date_reception
+    ForeignKey utilisateur
+    BooleanField validee
+  }
+  class LigneReception {
+    BigAutoField id
+    ForeignKey reception
+    ForeignKey ligne_achat
+    CharField numero_lot
+    DateField date_peremption
+    PositiveIntegerField quantite_recue
+  }
+  class LotStock {
+    BigAutoField id
+    ForeignKey medicament
+    CharField numero_lot
+    DateField date_peremption
+    PositiveIntegerField quantite
+    PositiveIntegerField quantite_recue
+    BooleanField bloque
+    DateTimeField date_creation
+  }
+  class MouvementStock {
+    BigAutoField id
+    ForeignKey lot
+    CharField type_mouvement
+    PositiveIntegerField quantite
+    TextField motif
+    ForeignKey utilisateur
+    DateTimeField date_mouvement
+  }
+  class Vente {
+    BigAutoField id
+    ForeignKey client
+    ForeignKey utilisateur
+    DateTimeField date_vente
+    JSONField instantane_facture
+    JSONField controle_delivrance
+    CharField statut
+  }
+  class LigneVente {
+    BigAutoField id
+    ForeignKey lot_demande
+    ForeignKey vente
+    ForeignKey medicament
+    PositiveIntegerField quantite
+    DecimalField prix_unitaire
+  }
+  class Paiement {
+    BigAutoField id
+    UUIDField cle_operation
+    CharField statut
+    CharField reference_verification
+    ForeignKey verifie_par
+    DateTimeField date_verification
+    ForeignKey vente
+    DecimalField montant
+    CharField mode
+    DateTimeField date_paiement
+    ForeignKey utilisateur
+  }
+  class RetourVente {
+    BigAutoField id
+    ForeignKey vente
+    ForeignKey utilisateur
+    DateTimeField date_retour
+    CharField statut
+    TextField motif
+  }
+  class LigneRetour {
+    BigAutoField id
+    ForeignKey lot_origine
+    ForeignKey retour
+    ForeignKey ligne_vente
+    PositiveIntegerField quantite
+  }
+  class LigneVenteLot {
+    BigAutoField id
+    ForeignKey ligne_vente
+    ForeignKey lot
+    PositiveIntegerField quantite
+  }
+  class Remboursement {
+    BigAutoField id
+    UUIDField cle_operation
+    ForeignKey retour
+    DecimalField montant
+    ForeignKey utilisateur
+    TextField motif
+    DateTimeField date_creation
+  }
+  class EvenementAudit {
+    BigAutoField id
+    ForeignKey acteur
+    CharField action
+    CharField objet
+    TextField motif
+    DateTimeField date_creation
+  }
+  class DecisionQuarantaine {
+    BigAutoField id
+    OneToOneField ligne_retour
+    CharField decision
+    ForeignKey lot
+    TextField motif
+    ForeignKey utilisateur
+    DateTimeField date_creation
+  }
+  class ParametresPharmacie {
+    BigAutoField id
+    CharField nom
+    TextField adresse
+    TextField mentions
+  }
+  Categorie "1" <-- "0..*" Medicament : categorie
+  Fournisseur "1" <-- "0..*" CommandeAchat : fournisseur
+  Utilisateur "1" <-- "0..*" CommandeAchat : utilisateur
+  CommandeAchat "1" <-- "0..*" LigneAchat : commande
+  Medicament "1" <-- "0..*" LigneAchat : medicament
+  CommandeAchat "1" <-- "0..*" ReceptionAchat : commande
+  Utilisateur "1" <-- "0..*" ReceptionAchat : utilisateur
+  ReceptionAchat "1" <-- "0..*" LigneReception : reception
+  LigneAchat "1" <-- "0..*" LigneReception : ligne_achat
+  Medicament "1" <-- "0..*" LotStock : medicament
+  LotStock "1" <-- "0..*" MouvementStock : lot
+  Utilisateur "1" <-- "0..*" MouvementStock : utilisateur
+  Client "0..1" <-- "0..*" Vente : client
+  Utilisateur "1" <-- "0..*" Vente : utilisateur
+  LotStock "0..1" <-- "0..*" LigneVente : lot_demande
+  Vente "1" <-- "0..*" LigneVente : vente
+  Medicament "1" <-- "0..*" LigneVente : medicament
+  Utilisateur "0..1" <-- "0..*" Paiement : verifie_par
+  Vente "1" <-- "0..*" Paiement : vente
+  Utilisateur "1" <-- "0..*" Paiement : utilisateur
+  Vente "1" <-- "0..*" RetourVente : vente
+  Utilisateur "1" <-- "0..*" RetourVente : utilisateur
+  LotStock "0..1" <-- "0..*" LigneRetour : lot_origine
+  RetourVente "1" <-- "0..*" LigneRetour : retour
+  LigneVente "1" <-- "0..*" LigneRetour : ligne_vente
+  LigneVente "1" <-- "0..*" LigneVenteLot : ligne_vente
+  LotStock "1" <-- "0..*" LigneVenteLot : lot
+  RetourVente "1" <-- "0..*" Remboursement : retour
+  Utilisateur "1" <-- "0..*" Remboursement : utilisateur
+  Utilisateur "1" <-- "0..*" EvenementAudit : acteur
+  LigneRetour "1" <-- "0..*" DecisionQuarantaine : ligne_retour
+  LotStock "0..1" <-- "0..*" DecisionQuarantaine : lot
+  Utilisateur "1" <-- "0..*" DecisionQuarantaine : utilisateur

@@ -1,0 +1,20 @@
+sequenceDiagram
+  actor Personnel
+  participant Vue
+  participant Service
+  participant Base
+  Personnel->>Vue: Confirmer le brouillon avec contrôle professionnel si requis
+  Vue->>Service: confirmer_vente(id, acteur, contrôle)
+  Service->>Service: Vérifier permissions et règles de délivrance
+  Service->>Base: BEGIN et verrou vente
+  Service->>Base: Verrou lots vendables dans un ordre stable
+  alt Brouillon valide et quantités disponibles
+    Service->>Service: Réserver les lots demandés puis allouer FEFO
+    Service->>Base: Décrémenter lots et créer mouvements et allocations
+    Service->>Base: Enregistrer instantané et état validé
+    Service->>Base: Créer audit puis COMMIT
+    Service-->>Personnel: Vente validée et documents disponibles
+  else Incohérence ou stock insuffisant
+    Service->>Base: ROLLBACK
+    Service-->>Personnel: Refus expliqué sans mouvement partiel
+  end

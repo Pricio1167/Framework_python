@@ -1,4 +1,4 @@
-
+﻿
 from django.contrib import admin
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -26,19 +26,19 @@ class CommandeAchatAdmin(admin.ModelAdmin):
         "utilisateur",
     )
     def has_change_permission(self, request, obj=None):
-        if obj and obj.statut in ("PARTIELLE", "RECUE"):
+        if obj and obj.statut != "BROUILLON":
             return False
         return super().has_change_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        if obj and obj.statut in ("PARTIELLE", "RECUE"):
-            return False
-        return super().has_delete_permission(request, obj)
+        return False
 
     list_filter = ("statut", "date_commande")
     search_fields = ("fournisseur__nom",)
     inlines = [LigneAchatInline]
     readonly_fields = ("date_commande",)
+    def get_readonly_fields(self, request, obj=None):
+        return ("date_commande", "statut", "instantane_document")
 
 
 class LigneReceptionInline(admin.TabularInline):
@@ -64,35 +64,6 @@ class LigneReceptionInline(admin.TabularInline):
 @admin.register(ReceptionAchat)
 class ReceptionAchatAdmin(admin.ModelAdmin):
     
-    @admin.action(description="Valider les réceptions sélectionnées")
-    def valider_receptions(self, request, queryset):
-        if not request.user.has_perm("achats.change_receptionachat"):
-            self.message_user(
-                request,
-                "Vous n'avez pas la permission de valider une réception.",
-                level=messages.ERROR,
-            )
-            return
-
-        for reception in queryset:
-            try:
-                valider_reception(reception.pk)
-
-            except ValidationError as erreur:
-                self.message_user(
-                    request,
-                    f"Réception {reception.pk} : {erreur}",
-                    level=messages.ERROR,
-                )
-
-            else:
-                self.message_user(
-                    request,
-                    f"Réception {reception.pk} validée.",
-                    level=messages.SUCCESS,
-                )
-        actions = ["valider_receptions"]
-
     @admin.action(description="Valider les réceptions sélectionnées")
     def valider_receptions(self, request, queryset):
         if not request.user.has_perm("achats.change_receptionachat"):
@@ -132,10 +103,7 @@ class ReceptionAchatAdmin(admin.ModelAdmin):
     inlines = [LigneReceptionInline]
 
     def has_delete_permission(self, request, obj=None):
-        if obj and obj.validee:
-            return False
-
-        return super().has_delete_permission(request, obj)
+        return False
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.validee:

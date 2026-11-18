@@ -99,7 +99,7 @@ def valider_reception(reception_id):
 
     # Mettre a jour les lots
     for ligne in lignes:
-        lot, cree = LotStock.objects.get_or_create(
+        lot, cree = LotStock.objects.select_for_update().get_or_create(
             medicament=ligne.ligne_achat.medicament,
             numero_lot=ligne.numero_lot,
             defaults={
@@ -134,7 +134,17 @@ def valider_reception(reception_id):
 
     # Confirmer la reception
     reception.validee = True
-    reception.save(update_fields=["validee"])
+    from dashboard.parametres import identite_pharmacie
+    reception.instantane_document = {
+        **identite_pharmacie(), "fournisseur": commande.instantane_document.get("fournisseur", str(commande.fournisseur)),
+        "commande": commande.pk,
+        "lignes": [{"medicament": str(l.ligne_achat.medicament), "quantite": l.quantite_recue,
+                    "numero_lot": l.numero_lot, "peremption": l.date_peremption.isoformat(),
+                    "prix_unitaire": str(l.ligne_achat.prix_unitaire),
+                    "sous_total": str(l.quantite_recue*l.ligne_achat.prix_unitaire)} for l in lignes],
+        "total": str(reception.total),
+    }
+    reception.save(update_fields=["validee", "instantane_document"])
 
     # Actualiser le statut de la commande
     lignes_commande = list(commande.lignes.all())
